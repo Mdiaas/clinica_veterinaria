@@ -39,7 +39,7 @@
                                 <a class="nav-link" href="#">Profissionais cadastrados</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Tutores</a>
+                                <a class="nav-link" href="{{Route('tutores')}}">Tutores</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Animais</a>
@@ -50,7 +50,6 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Atendimento</a>
                             </li>
-                                
                         @endauth
                     </ul>
 
