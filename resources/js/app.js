@@ -22,6 +22,11 @@ window.Vue = require('vue').default;
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('login-component', require('./components/Login.vue').default);
 Vue.component('home-component', require('./components/Home.vue').default);
+Vue.component('tutores-component', require('./components/Tutores.vue').default);
+Vue.component('input-container-component', require('./components/inputContainer.vue').default);
+Vue.component('table-component', require('./components/table.vue').default);
+Vue.component('card-component', require('./components/card.vue').default);
+Vue.component('modal-component', require('./components/modal.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
