@@ -27,6 +27,7 @@ Vue.component('input-container-component', require('./components/inputContainer.
 Vue.component('table-component', require('./components/table.vue').default);
 Vue.component('card-component', require('./components/card.vue').default);
 Vue.component('modal-component', require('./components/modal.vue').default);
+Vue.component('alert-component', require('./components/alert.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

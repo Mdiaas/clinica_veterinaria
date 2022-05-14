@@ -150,8 +150,15 @@
                         texto-ajuda="CEP do tutor"
                     >
                     <input type="text" class="form-control" id="cadastro-cep" aria-describedby="cadastroCEPHelp" v-model="cep">
-                    
                     </input-container-component>
+                </div>
+                <div class = "row">
+                    <template :v-slot=alertas>
+                        <alert-component classe="danger" :detalhe="detalheTransacao" titulo="Erro ao tentar cadastrar tutor" v-if="statusTransacao == 'erro'">
+                        </alert-component>
+                        <alert-component classe="success" titulo="Tutor cadastrado com sucesso" v-if="statusTransacao == 'inserido'">
+                        </alert-component>
+                    </template>
                 </div>
             </template>
             <template v-slot:rodape>
@@ -176,7 +183,9 @@
                 cidade : '',
                 bairro : '',
                 logradouro : '',
-                cep : ''
+                cep : '',
+                statusTransacao : '',
+                detalheTransacao : []
             }  
         },
         computed:{
@@ -211,10 +220,13 @@
                 }
                 axios.post(this.url, formData, config)
                     .then(response => {
+                        this.statusTransacao = 'inserido'
                         console.log(response)
                     })
                     .catch(errors => {
-                        console.log(errors)
+                        this.statusTransacao = 'erro'
+                        this.detalheTransacao = errors.response
+                        console.log(this.detalheTransacao)
                     })
             }
         }      
