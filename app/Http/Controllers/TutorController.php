@@ -37,7 +37,7 @@ class TutorController extends Controller
             $tutor_repository->selectAtributos($request->atributos);
         }
 
-        return response()->json($tutor_repository->getResponse(), 200);
+        return response()->json($tutor_repository->getPagedResponse(5), 200);
     }
 
     /**
