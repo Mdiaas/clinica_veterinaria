@@ -12,7 +12,7 @@
                                     id-help="idHelp" 
                                     texto-ajuda="Informe o ID do tutor (parametro opcional)"
                                 >
-                                <input type="number" class="form-control" id="input-id" aria-describedby="idHelp">
+                                <input type="number" class="form-control" id="input-id" aria-describedby="idHelp" v-model="busca.id">
                                 </input-container-component>
                             </div>
                             <div class="col mb-3">
@@ -22,19 +22,19 @@
                                     id-help="nomeHelp" 
                                     texto-ajuda="Informe o nome do tutor (parametro opcional)"
                                 >
-                                <input type="text" class="form-control" id="input-nome" aria-describedby="nomeHelp">
+                                <input type="text" class="form-control" id="input-nome" aria-describedby="nomeHelp" v-model="busca.nome">
                                 </input-container-component>
                             </div>
                         </div>
                     </template>
                     <template v-slot:rodape>
-                        <button type="submit" class="btn btn-primary btn-sm float-end" >Pesquisar</button>
+                        <button type="submit" class="btn btn-primary btn-sm float-end" @click="pesquisar()">Pesquisar</button>
                     </template>
                 </card-component>
                 
                 <card-component titulo="Tutores cadastrados">
                     <template v-slot:conteudo>
-                        <table-component :dados="tutores" 
+                        <table-component :dados="tutores.data" 
                             :titulos="{
                                 id: { titulo : 'ID', tipo:'texto'},
                                 nome: {titulo : 'Nome', tipo:'texto'},
@@ -45,7 +45,18 @@
                             </table-component>
                     </template>
                     <template v-slot:rodape>
-                        <button type="submit" data-bs-toggle="modal" data-bs-target="#modalTutor" class="btn btn-primary btn-sm float-end">Novo tutor</button>
+                        <div class="row">
+                            <div class="col-10">
+                                <paginate-component>
+                                        <li v-for="l, key in tutores.links" :key="key" :class ="l.active ? 'page-item active' : 'page-item'" @click.prevent="paginacao(l)">
+                                            <a class="page-link" href="" v-html="l.label"></a>
+                                        </li>
+                                </paginate-component>
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" data-bs-toggle="modal" data-bs-target="#modalTutor" class="btn btn-primary btn-sm float-end">Novo tutor</button>
+                            </div>
+                        </div>
                     </template>
                 </card-component>
             </div>
@@ -183,6 +194,8 @@
         data(){
             return{
                 url : 'http://127.0.0.1:8000/api/v1/tutor',
+                url_paginacao : '',
+                url_filtro : '',
                 nome : '',
                 sexo : '',
                 cpf : '',
@@ -194,7 +207,8 @@
                 cep : '',
                 statusTransacao : '',
                 detalheTransacao : {},
-                tutores: []
+                tutores: { data: []},
+                busca:{id:'', nome:''}
             }  
         },
         computed:{
@@ -203,15 +217,43 @@
                     return indice.includes('token=')
                 })
                 token = token.split('=')[1]
-                console.log(token)
                 return "Bearer " + token;
             }
         },
         methods:{
+            pesquisar(){
+                let filtros = ''
+                for (let chave in this.busca){
+                    if(this.busca[chave]){
+                        if(filtros != '')
+                            $filtros += ';';
+                        filtros+= chave + ":like:" + this.busca[chave]
+                    }
+                }
+                if(filtros){
+                    this.url_paginacao = "page=1" 
+                    this.url_filtro = "&filtro="+filtros
+                }
+                else
+                    this.url_filtro = ''
+                console.log(this.url_filtro)
+                this.carregar_lista()
+            },
+            paginacao(l){
+                if(l.url){
+                    l.url = l.url.split('?')[1];
+                    console.log(l.url);
+                    this.url_paginacao = l.url
+                    this.carregar_lista()
+                }
+            },
             carregar_lista(){
-                axios.get(this.url).then(
+                let url = this.url + "?" + this.url_paginacao + this.url_filtro
+                
+                axios.get(url).then(
                     response => {
                         this.tutores = response.data
+                        console.log(response)
                     }).
                     catch(errors => {
 
