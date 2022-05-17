@@ -28,13 +28,21 @@
                         </div>
                     </template>
                     <template v-slot:rodape>
-                        <button type="submit" class="btn btn-primary btn-sm float-end">Pesquisar</button>
+                        <button type="submit" class="btn btn-primary btn-sm float-end" >Pesquisar</button>
                     </template>
                 </card-component>
                 
                 <card-component titulo="Tutores cadastrados">
                     <template v-slot:conteudo>
-                        <table-component></table-component>
+                        <table-component :dados="tutores" 
+                            :titulos="{
+                                id: { titulo : 'ID', tipo:'texto'},
+                                nome: {titulo : 'Nome', tipo:'texto'},
+                                logradouro: {titulo : 'Endereço', tipo:'texto'},
+                                CPF :{titulo:'CPF', tipo:'texto'},
+                                created_at:{titulo: 'Data de criação', tipo:'data'}
+                            }">
+                            </table-component>
                     </template>
                     <template v-slot:rodape>
                         <button type="submit" data-bs-toggle="modal" data-bs-target="#modalTutor" class="btn btn-primary btn-sm float-end">Novo tutor</button>
@@ -154,9 +162,9 @@
                 </div>
                 <div class = "row">
                     <template :v-slot=alertas>
-                        <alert-component classe="danger" :detalhe="detalheTransacao" titulo="Erro ao tentar cadastrar tutor" v-if="statusTransacao == 'erro'">
+                        <alert-component classe="danger" :detalhes="detalheTransacao" titulo="Erro ao tentar cadastrar tutor" v-if="statusTransacao == 'erro'">
                         </alert-component>
-                        <alert-component classe="success" titulo="Tutor cadastrado com sucesso" v-if="statusTransacao == 'inserido'">
+                        <alert-component classe="success" :detalhes="detalheTransacao" titulo="Tutor cadastrado com sucesso" v-if="statusTransacao == 'inserido'">
                         </alert-component>
                     </template>
                 </div>
@@ -185,7 +193,8 @@
                 logradouro : '',
                 cep : '',
                 statusTransacao : '',
-                detalheTransacao : []
+                detalheTransacao : {},
+                tutores: []
             }  
         },
         computed:{
@@ -199,6 +208,15 @@
             }
         },
         methods:{
+            carregar_lista(){
+                axios.get(this.url).then(
+                    response => {
+                        this.tutores = response.data
+                    }).
+                    catch(errors => {
+
+                    })
+            },
             salvar(){
                 let formData = new FormData()
                 formData.append('nome', this.nome)
@@ -221,15 +239,23 @@
                 axios.post(this.url, formData, config)
                     .then(response => {
                         this.statusTransacao = 'inserido'
-                        console.log(response)
+                        this.detalheTransacao = {
+                            mensagem: 'Cadastro de ID: ' + response.data.id + ' registrado com sucesso'
+                        }
                     })
                     .catch(errors => {
+                        console.log(errors.response.data.errors);
                         this.statusTransacao = 'erro'
-                        this.detalheTransacao = errors.response
-                        console.log(this.detalheTransacao)
+                        this.detalheTransacao = {
+                            mensagem: '',
+                            errors: errors.response.data.errors
+                        }
                     })
             }
-        }      
+        },
+        mounted(){
+            this.carregar_lista()
+        }, 
         
     }
 </script>
