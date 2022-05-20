@@ -35,12 +35,16 @@
                 <card-component titulo="Tutores cadastrados">
                     <template v-slot:conteudo>
                         <table-component :dados="tutores.data" 
+                            :visualizar =" { visivel : true, dataToggle : 'modal', dataTarget : '#modalVisualizar'}"
+                            :atualizar = true
+                            :excluir = true
                             :titulos="{
                                 id: { titulo : 'ID', tipo:'texto'},
                                 nome: {titulo : 'Nome', tipo:'texto'},
                                 logradouro: {titulo : 'Endereço', tipo:'texto'},
                                 CPF :{titulo:'CPF', tipo:'texto'},
-                                created_at:{titulo: 'Data de criação', tipo:'data'}
+                                created_at:{titulo: 'Data de criação', tipo:'data'},
+                                dados:{titulo: null, tipo: null}
                             }">
                             </table-component>
                     </template>
@@ -61,7 +65,107 @@
                 </card-component>
             </div>
         </div>
-
+        <modal-component titulo="Visualizar cadastro do tutor" id="modalVisualizar">
+            <template v-slot:conteudo>
+                <fieldset disabled>
+                    <input-container-component 
+                        titulo = "ID" 
+                        id = "input-id" 
+                        id-help="idHelp"
+                    >
+                    <input type="number" class="form-control" id="input-id" aria-describedby="idHelp" :value="$store.state.item.id">
+                    </input-container-component>
+                    <input-container-component 
+                        titulo = "Nome" 
+                        id = "input-nome-visualizar" 
+                        id-help="nomeVisualizarHelp"
+                    >
+                    <input type="text" class="form-control" id="input-nome-visualizar" aria-describedby="nomeVisualizarHelp" :value="$store.state.item.nome">
+                    </input-container-component>
+                    <div class="row">
+                        <div class="col">
+                            <input-container-component 
+                                titulo = "Sexo" 
+                                id = "input-sexo-visualizar" 
+                                id-help="sexoVisualizarHelp"
+                            >
+                            <input type="text" class="form-control" id="input-sexo-visualizar" aria-describedby="sexoVisualizarHelp" :value="$store.state.item.sexo == 'M' ? 'Masculino' : 'Feminino'">
+                            </input-container-component>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <input-container-component 
+                                titulo = "CPF" 
+                                id = "input-cpf-visualizar" 
+                                id-help="cpfVisualizarHelp"
+                            >
+                            <input type="text" class="form-control" id="input-cpf-visualizar" aria-describedby="cpfVisualizarHelp" :value="$store.state.item.CPF">
+                            </input-container-component>
+                        </div>
+                        <div class="col">
+                            <input-container-component 
+                                titulo = "RG" 
+                                id = "input-rg-visualizar" 
+                                id-help="rgVisualizarHelp"
+                            >
+                            <input type="text" class="form-control" id="input-rg-visualizar" aria-describedby="rgVisualizarHelp" :value="$store.state.item.RG">
+                            </input-container-component>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <input-container-component 
+                                titulo = "Estado" 
+                                id = "input-uf-visualizar" 
+                                id-help="ufVisualizarHelp"
+                            >
+                            <input type="text" class="form-control" id="input-uf-visualizar" aria-describedby="ufVisualizarHelp" :value="$store.state.item.UF">
+                            </input-container-component>
+                        </div>
+                        <div class="col">
+                            <input-container-component 
+                                titulo = "Cidade" 
+                                id = "input-cidade-visualizar" 
+                                id-help="cidadeVisualizarHelp"
+                            >
+                            <input type="text" class="form-control" id="input-cidade-visualizar" aria-describedby="cidadeVisualizarHelp" :value="$store.state.item.cidade">
+                            </input-container-component>
+                        </div>
+                        <div class="col">
+                            <input-container-component 
+                                titulo = "Bairro" 
+                                id = "input-bairro-visualizar" 
+                                id-help="bairroVisualizarHelp"
+                            >
+                            <input type="text" class="form-control" id="input-bairro-visualizar" aria-describedby="bairroVisualizarHelp" :value="$store.state.item.bairro">
+                            </input-container-component>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <input-container-component 
+                                titulo = "Logradouro" 
+                                id = "input-logradouro-visualizar" 
+                                id-help="logradouroVisualizarHelp"
+                            >
+                            <input type="text" class="form-control" id="input-logradouro-visualizar" aria-describedby="logradouroVisualizarHelp" :value="$store.state.item.logradouro">
+                            </input-container-component>
+                        </div>
+                    </div>
+                    <div class="row" v-if="$store.state.item.animais">
+                        <label for="" class="">Animais:</label>
+                        <ul class="list-group">
+                            <li v-for="l, key in $store.state.item.animais" :key ="key" class="list-group-item">{{l.nome}}</li>
+                        </ul>
+                    </div>
+                </fieldset>
+            </template>
+            <template :v-slot=alertas></template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </template>
+        </modal-component>
         <modal-component titulo="Cadastrar tutor" id="modalTutor">
             <template v-slot:conteudo>
                 <div class="row mb-2">
@@ -253,7 +357,6 @@
                 axios.get(url).then(
                     response => {
                         this.tutores = response.data
-                        console.log(response)
                     }).
                     catch(errors => {
 

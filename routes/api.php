@@ -20,6 +20,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->middleware('jwt.auth')->group(function () {
     Route::apiResource('tutor', 'App\Http\Controllers\TutorController');
     Route::apiResource('animal', 'App\Http\Controllers\AnimalController');
+    Route::apiResource('especie', 'App\Http\Controllers\EspecieController');
+
+    Route::get('get_tutores', 'App\Http\Controllers\TutorController@get_all');
 
     Route::post('me', 'App\Http\Controllers\AuthController@me');
     Route::post('refresh', 'App\Http\Controllers\AuthController@refresh');

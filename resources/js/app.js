@@ -7,7 +7,15 @@
 require('./bootstrap');
 
 window.Vue = require('vue').default;
+/* importando e configurando o Vuex */
+import Vuex from 'Vuex'
+Vue.use(Vuex)
 
+const store = new Vuex.Store({
+    state: {
+        item : {}
+    }
+})
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -29,6 +37,7 @@ Vue.component('card-component', require('./components/card.vue').default);
 Vue.component('modal-component', require('./components/modal.vue').default);
 Vue.component('alert-component', require('./components/alert.vue').default);
 Vue.component('paginate-component', require('./components/paginate.vue').default);
+Vue.component('animais-component', require('./components/Animais.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -37,4 +46,5 @@ Vue.component('paginate-component', require('./components/paginate.vue').default
 
 const app = new Vue({
     el: '#app',
+    store
 });

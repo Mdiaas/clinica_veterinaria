@@ -42,7 +42,7 @@
                                 <a class="nav-link" href="{{Route('tutores')}}">Tutores</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Animais</a>
+                                <a class="nav-link"  href="{{Route('animais')}}">Animais</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Agenda</a>

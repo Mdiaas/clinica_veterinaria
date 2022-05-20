@@ -39,7 +39,7 @@ class AnimalController extends Controller
             $animal_repository->selectAtributos($request->atributos);
         }
 
-        return response()->json($animal_repository->getResponse(), 200);
+        return response()->json($animal_repository->getPagedResponse(5), 200);
     }
 
     /**

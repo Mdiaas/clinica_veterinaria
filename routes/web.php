@@ -24,3 +24,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/tutores', function () {
     return view('app.tutores');
 })->name('tutores')->middleware('auth');
+Route::get('/animais', function () {
+    return view('app.animais');
+})->name('animais')->middleware('auth');

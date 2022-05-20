@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\especie;
 use Illuminate\Http\Request;
+use App\Repositories\EspecieRepository;
 
 class EspecieController extends Controller
 {
@@ -12,9 +13,14 @@ class EspecieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(Especie $especie)
+    {
+        $this->especie = $especie;
+    }
     public function index()
     {
-        //
+        $especie_repository = new EspecieRepository($this->especie);
+        return response()->json($especie_repository->getResponse(), 200);
     }
 
     /**

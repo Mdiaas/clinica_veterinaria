@@ -17,6 +17,11 @@ class TutorController extends Controller
     {
         $this->tutor = $tutor;
     }
+    public function get_all()
+    {
+        $tutor_repository = new TutorRepository($this->tutor);
+        return response()->json($tutor_repository->getResponse(5), 200);
+    }
     public function index(Request $request)
     {
         $tutor_repository = new TutorRepository($this->tutor);
