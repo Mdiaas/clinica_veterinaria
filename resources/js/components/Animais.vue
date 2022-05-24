@@ -38,7 +38,7 @@
                             :dados="animais.data"
                             :visualizar =" { visivel : true, dataToggle : 'modal', dataTarget : '#modalVisualizar'}"
                             :atualizar = true
-                            :excluir = true
+                            :excluir =" {visivel : true, dataToggle : 'modal', dataTarget : '#modalExcluir'}"
                             :titulos="{
                                 id: { titulo : 'ID', tipo:'texto'},
                                 nome: {titulo : 'Nome', tipo:'texto'},
@@ -68,8 +68,10 @@
         <modal-component titulo="Visualizar cadastro do animal" id="modalVisualizar">
             <template v-slot:conteudo>
                 <div class="row">
-                    <div class="col">
-                        <img v-if="$store.state.item.foto" :src="'storage/'+ $store.state.item.foto" class="img-thumbnail" width = "130" alt="foto do animal">
+                    <div class="col text-center">
+                        <button class="btn btn-default"> 
+                            <img v-if="$store.state.item.foto" :src="'storage/'+ $store.state.item.foto" class="img-thumbnail" width = "130" alt="foto do animal">
+                        </button>
                     </div>
                 </div>
                 <hr/>
@@ -109,7 +111,39 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
             </template>
         </modal-component>
-        
+        <!-- Modal remover -->
+        <modal-component titulo="Excluir Animal" id="modalExcluir">
+            <template v-slot:conteudo>
+                <div class="row">
+                    <div class="col text-center">
+                        <button class="btn btn-default"> 
+                            <img v-if="$store.state.item.foto" :src="'storage/'+ $store.state.item.foto" class="img-thumbnail" width = "130" alt="foto do animal">
+                        </button>
+                    </div>
+                </div>
+                <hr/>
+                <fieldset disabled>
+                    <input-container-component 
+                        titulo = "ID" 
+                        id = "input-id" 
+                        id-help="idHelp"
+                    >
+                    <input type="number" class="form-control" id="input-id" aria-describedby="idHelp" :value="$store.state.item.id">
+                    </input-container-component>
+                    <input-container-component 
+                        titulo = "Nome" 
+                        id = "input-nome-visualizar" 
+                        id-help="nomeVisualizarHelp"
+                    >
+                    <input type="text" class="form-control" id="input-nome-visualizar" aria-describedby="nomeVisualizarHelp" :value="$store.state.item.nome">
+                    </input-container-component>
+                </fieldset>
+            </template>
+            <template :v-slot=alertas></template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </template>
+        </modal-component>
         <!-- Modal de cadastro de animal -->
         <modal-component titulo="Cadastrar animal" id="modalAnimal">
             <template v-slot:conteudo>
