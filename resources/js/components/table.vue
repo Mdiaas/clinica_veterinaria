@@ -20,8 +20,8 @@
                             Visualizar
                         </button>
                         <button v-if="atualizar" class="btn btn-outline-primary btn-sm">Atualizar</button>
-                        <button v-if="excluir" class="btn btn-outline-danger btn-sm" :data-bs-toggle="visualizar.dataToggle" :data-bs-target="visualizar.dataTarget" @click="setStore(obj)">Excluir</button>
-                    </td>
+                        <button v-if="excluir.visivel" class="btn btn-outline-danger btn-sm" :data-bs-toggle="excluir.dataToggle" :data-bs-target="excluir.dataTarget" @click="setStore(obj)">Excluir</button>
+                    </td> 
                 </tr>
             </tbody>
         </table>
@@ -49,6 +49,8 @@
         },
         methods:{
             setStore(obj){
+                this.$store.state.transacao.mensagem = ''
+                this.$store.state.transacao.status = ''
                 this.$store.state.item = obj['dados']
             }
         }

@@ -113,7 +113,7 @@
         </modal-component>
         <!-- Modal remover -->
         <modal-component titulo="Excluir Animal" id="modalExcluir">
-            <template v-slot:conteudo>
+            <template v-slot:conteudo  v-if="$store.state.transacao.status !='sucesso'">
                 <div class="row">
                     <div class="col text-center">
                         <button class="btn btn-default"> 
@@ -125,28 +125,32 @@
                 <fieldset disabled>
                     <input-container-component 
                         titulo = "ID" 
-                        id = "input-id" 
-                        id-help="idHelp"
+                        id = "input-id-excluir" 
+                        id-help="idExcluirHelp"
                     >
-                    <input type="number" class="form-control" id="input-id" aria-describedby="idHelp" :value="$store.state.item.id">
+                    <input type="number" class="form-control" id="input-id" aria-describedby="idExcluirHelp" :value="$store.state.item.id">
                     </input-container-component>
                     <input-container-component 
                         titulo = "Nome" 
-                        id = "input-nome-visualizar" 
-                        id-help="nomeVisualizarHelp"
+                        id = "input-nome-excluir" 
+                        id-help="nomeExcluirHelp"
                     >
-                    <input type="text" class="form-control" id="input-nome-visualizar" aria-describedby="nomeVisualizarHelp" :value="$store.state.item.nome">
+                    <input type="text" class="form-control" id="input-nome-excluir" aria-describedby="nomeExcluirHelp" :value="$store.state.item.nome">
                     </input-container-component>
                 </fieldset>
             </template>
-            <template :v-slot=alertas></template>
+            <template v-slot:alertas>
+                <alert-component v-if ="$store.state.transacao.status == 'sucesso'" classe="success" titulo="Exclusão realizada com sucesso" :detalhes ="{ mensagem : $store.state.transacao.mensagem}"></alert-component>
+                <alert-component v-if ="$store.state.transacao.status == 'erro'" classe="danger" titulo = "Erro na exclusão do animal" :detalhes ="{ mensagem : $store.state.transacao.mensagem}"></alert-component>
+            </template>
             <template v-slot:rodape>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-danger" @click="remover" v-if="$store.state.transacao.status !='sucesso'">Remover</button>
             </template>
         </modal-component>
         <!-- Modal de cadastro de animal -->
         <modal-component titulo="Cadastrar animal" id="modalAnimal">
-            <template v-slot:conteudo>
+            <template v-slot:conteudo >
                 <div class="row mb-2">
                     <input-container-component 
                         titulo = "Nome" 
@@ -252,6 +256,31 @@
             }
         },
         methods:{
+            remover(){
+                let confirmar = confirm("Deseja confirmar a remoção do animal?")
+                if(!confirmar) return false
+                var url = this.url + '/' + this.$store.state.item.id
+                console.log(url)
+                let formData = new FormData();
+                formData.append('_method', 'delete')
+
+                let config = {
+                    'Accept' : 'Application/json',
+                    'Authorization' : this.token
+                }
+                axios.post(url, formData, config).
+                then(response => {
+                    this.carregar_lista()
+                    this.$store.state.transacao.status = 'sucesso'
+                    console.log(response.data.msg)
+                    this.$store.state.transacao.mensagem = ''
+                }).catch(
+                    errors => {
+                        this.$store.state.transacao.status = 'Erro'
+                        this.$store.state.transacao.mensagem = 'Não foi possível realizar a exclusão do registro'
+                    }
+                )
+            },
             carregar_imagem(e){
                 this.foto = e.target.files;
             },
@@ -335,6 +364,7 @@
                         this.detalheTransacao = {
                             mensagem: 'Cadastro de ID: ' + response.data.id + ' registrado com sucesso'
                         }
+                        this.carregar_lista()
                     })
                     .catch(errors => {
                         this.statusTransacao = 'erro'
